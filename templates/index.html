@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fake Friendship Detector</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton:wght@700&family=Bangers&family=Bebas+Neue&family=Poppins:wght@700&family=Comic+Neue:ital,wght@1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+  <style>
+    /* ... keep your long CSS here, unchanged ... */
+    :root {
+      --charcoal: #181823;
+      --neon-pink: #ff5fcf;
+      --blood-red: #db102b;
+      --toxic-green: #32ff80;
+      --neon-yellow: #fff72b;
+      --pale-pink: #ffd9ea;
+      --neon-purple: #aa1fff;
+      --gradient-header: linear-gradient(90deg,var(--neon-pink),var(--blood-red));
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', 'Inter', sans-serif;
+      background: var(--charcoal);
+      color: #fff;
+      letter-spacing: 0.04em;
+      min-height: 100vh;
+    }
+    .dark-toggle {
+      position: fixed;
+      top: 20px;
+      right: 30px;
+      z-index: 10;
+      background: var(--charcoal);
+      border: 1px solid var(--neon-pink);
+      border-radius: 20px;
+      color: var(--neon-yellow);
+      font-size: 1.5em;
+      padding: 6px 18px;
+      cursor: pointer;
+      box-shadow: 0 0 12px 0 var(--neon-pink);
+      transition: background .3s;
+    }
+    header {
+      padding: 28px 0 16px;
+      background: transparent;
+      text-align: center;
+      position: relative;
+    }
+    .title-flag {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-family: 'Bangers','Anton','Bebas Neue', cursive;
+      font-size: 2.8em;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: var(--neon-pink);
+      position: relative;
+    }
+    .flag-icon {
+      position: relative;
+      font-size: 1.3em;
+      color: #db102b;
+      filter: drop-shadow(0 0 8px var(--neon-pink));
+      display: flex;
+      align-items: center;
+      animation: flag-sparkle 1.8s infinite linear;
+    }
+    @keyframes flag-sparkle {
+      0% { filter: drop-shadow(0 0 8px var(--neon-pink)); }
+      60% { filter: drop-shadow(0 0 16px var(--neon-pink)); }
+      100% { filter: drop-shadow(0 0 8px var(--neon-pink)); }
+    }
+    .sparkles {
+      position: absolute;
+      top: -16px;
+      left: 48px;
+      pointer-events: none;
+      font-size: 0.5em;
+      opacity: 0.85;
+      animation: sparkle-float 1.8s infinite alternate;
+    }
+    @keyframes sparkle-float {
+      from { transform: translateY(0) scale(1);}
+      to { transform: translateY(-5px) scale(1.12);}
+    }
+    .neon-underline {
+      width: 220px;
+      height: 6px;
+      border-radius: 4px;
+      background: var(--neon-pink);
+      margin: 6px auto 0;
+      box-shadow: 0 0 15px 2px var(--neon-pink);
+    }
+    .subtext {
+      margin-top: 6px;
+      font-family: 'Poppins', sans-serif;
+      font-style: italic;
+      font-weight: bold;
+      font-size: 1.08em;
+      color: var(--neon-yellow);
+      background: rgba(255,255,68,0.05);
+    }
+    .input-section {
+      max-width: 600px;
+      margin: 32px auto 18px;
+      background: rgba(40,14,42,0.78);
+      border-radius: 28px;
+      box-shadow: 0 4px 32px 1px #35092b44;
+      padding: 28px 36px;
+      text-align: center;
+    }
+    .input-section-title {
+      font-family: 'Poppins', 'Inter', sans-serif;
+      font-weight: bold;
+      color: var(--neon-yellow);
+      font-size: 1.55em;
+      margin-bottom: .14em;
+    }
+    .input-section-sub {
+      font-family: 'Comic Neue', cursive;
+      color: var(--pale-pink);
+      font-size: 1.08em;
+      margin-bottom: 15px;
+    }
+    textarea {
+      width: 98%;
+      background: #181823;
+      color: #fff;
+      border: 3px solid var(--neon-pink);
+      outline: none;
+      border-radius: 13px;
+      min-height: 80px;
+      max-height: 240px;
+      resize: vertical;
+      font-size: 1.15em;
+      font-family: 'Poppins','Comic Neue',sans-serif;
+      padding: 13px;
+      margin-bottom: 16px;
+      box-shadow: 0 0 8px 0 var(--neon-pink);
+      transition: border-color .2s, box-shadow .2s;
+      animation: textarea-pulse 2s infinite alternate;
+    }
+    textarea:focus {
+      border-color: var(--blood-red);
+      box-shadow: 0 0 20px 4px var(--neon-pink), 0 0 10px var(--blood-red);
+      animation: textarea-focus .6s alternate;
+    }
+    @keyframes textarea-pulse {
+      to { box-shadow: 0 0 20px 4px var(--neon-pink);}
+    }
+    @keyframes textarea-focus {
+      from { box-shadow: 0 0 10px 0 var(--blood-red);}
+      to { box-shadow: 0 0 18px 5px var(--blood-red);}
+    }
+    .analyze-btn {
+      background: var(--blood-red);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.19em;
+      font-family: 'Bebas Neue', 'Poppins', sans-serif;
+      font-weight: bold;
+      padding: 13px 42px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 18px 0 var(--blood-red);
+      position: relative;
+      transition: transform .08s, box-shadow .3s;
+    }
+    .analyze-btn:hover {
+      transform: translateY(-2px) scale(1.03) rotate(-2deg);
+      box-shadow: 0 0 24px 1px var(--blood-red), 0 0 8px var(--neon-pink);
+      animation: fire-flicker .7s infinite alternate;
+    }
+    .analyze-btn:after {
+      content: "🔥";
+      display: inline-block;
+      margin-left: 10px;
+      vertical-align: middle;
+      font-size: 1em;
+      animation: fire-edges 2s infinite alternate;
+    }
+    @keyframes fire-flicker {
+      0% { filter: brightness(1) drop-shadow(0 0 12px var(--blood-red));}
+      60% { filter: brightness(1.3) drop-shadow(0 0 22px var(--neon-pink));}
+      100% { filter: brightness(1) drop-shadow(0 0 15px var(--blood-red));}
+    }
+    @keyframes fire-edges {
+      0%,100% { text-shadow: 0 0 6px #ff2b2b, 0 0 6px #fb6bb1;}
+      50% { text-shadow: 0 0 16px #fb6bb1, 0 0 10px #db102b;}
+    }
+    .output-section {
+      display: flex;
+      justify-content: space-between;
+      gap: 22px;
+      max-width: 1160px;
+      margin: 38px auto 0;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 850px) {
+      .output-section {
+        flex-direction: column;
+        gap: 30px;
+      }
+    }
+    .meme-card {
+      flex: 2 1 320px;
+      min-width: 300px;
+      background: linear-gradient(100deg,var(--neon-pink) 0%,var(--blood-red) 100%);
+      box-shadow: 0 6px 40px 5px #e935aaa3;
+      border-radius: 32px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 180px;
+      padding: 28px 16px 26px 26px;
+    }
+    .meme-burn-bg {
+      position: absolute;
+      inset: 0;
+      background: url('https://www.transparenttextures.com/patterns/old-wall-dark.png'), radial-gradient(ellipse,rgba(253,51,130,0.22) 40%,transparent 90%);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .meme-opener {
+      font-family: 'Bebas Neue','Anton','Bangers',cursive;
+      font-size: 2em;
+      color: #fffad2;
+      text-shadow: 0 2px 12px #850044, 0 0 8px #db102b;
+      z-index: 1;
+      margin-bottom: 19px;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+    .replay-btn {
+      z-index: 2;
+      background: var(--neon-yellow);
+      border: none;
+      color: #2c1138;
+      font-family: 'Poppins',sans-serif;
+      font-size: 1em;
+      font-weight: bold;
+      padding: 9px 18px;
+      border-radius: 28px;
+      box-shadow: 0 1px 12px 2px #ffd9ea;
+      cursor: pointer;
+      margin-top: 8px;
+      margin-left: auto;
+      display: inline-block;
+      transition: filter .19s;
+    }
+    .replay-btn:hover {
+      filter: brightness(1.13);
+    }
+    .red-flags-card {
+      flex: 3 1 430px;
+      min-width: 270px;
+      padding: 22px 28px;
+      border-radius: 24px;
+      background: #22283b;
+      box-shadow: 0 10px 34px 0 #ff5fcf46;
+      margin-bottom: 15px;
+    }
+    .redflags-title {
+      font-family: 'Poppins',sans-serif;
+      font-weight: bold;
+      color: var(--neon-pink);
+      font-size: 1.25em;
+      margin-bottom: .6em;
+      letter-spacing: 1.4px;
+    }
+    .redflags-list {
+      font-family: 'Comic Neue',cursive;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 1.12em;
+    }
+    .redflags-list li {
+      margin-bottom: 13px;
+      opacity: 0;
+      transform: translateX(-30px) scale(0.93);
+      animation: popin .9s forwards;
+      animation-delay: calc(var(--i)*0.22s);
+      background: rgba(251, 101, 151, 0.07);
+      border-radius: 7px;
+      padding: 7px 13px;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .redflags-list li .tooltip {
+      margin-left: 9px;
+      font-size: 1.1em;
+      color: var(--toxic-green);
+      position: relative;
+      cursor: pointer;
+      transition: color .14s;
+    }
+    .redflags-list li .tooltip:hover .tooltiptext {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .tooltiptext {
+      visibility: visible;
+      opacity: 0;
+      width: 210px;
+      background: #0e181e;
+      color: #ff6ebc;
+      text-align: left;
+      border-radius: 11px;
+      padding: 8px 13px;
+      position: absolute;
+      z-index: 4;
+      left: -10px;
+      top: 35px;
+      font-size: .88em;
+      pointer-events: none;
+      box-shadow: 0 0 15px 2px #b02b5c;
+      font-family: 'Comic Neue', cursive;
+      transition: opacity .2s;
+      font-style: italic;
+      letter-spacing: 0.2px;
+    }
+    @keyframes popin {
+      to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+    }
+    .verdict-card {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 32px auto 0;
+    }
+    .badge-verdict {
+      font-family: 'Bebas Neue','Anton',cursive;
+      font-weight: bold;
+      font-size: 2em;
+      letter-spacing: 2.2px;
+      padding: 27px 70px;
+      color: #fff;
+      border-radius: 18px;
+      border: 5px solid #ff2038;
+      box-shadow: 0 0 54px 7px #db102b;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: linear-gradient(115deg,#390312,var(--blood-red),#100024);
+      position: relative;
+      z-index: 3;
+      margin-bottom: 8px;
+    }
+    .badge-fakeaf {
+      background: url('https://cdn.pixabay.com/photo/2013/07/12/14/29/fire-148017_1280.png');
+      background-size: cover;
+      background-blend-mode: multiply;
+      border-color: #db102b;
+    }
+    .badge-mixed {
+      background: linear-gradient(100deg, #181823, var(--toxic-green));
+      border: 5px solid var(--toxic-green);
+      color: #181823;
+      text-shadow: 1px 1px 7px #32ff80;
+    }
+    .badge-realconfused {
+      background: linear-gradient(90deg, #2e0e5b, var(--neon-purple));
+      border: 5px solid var(--neon-purple);
+      color: #fff;
+      text-shadow: 0 0 12px #bd69ff;
+    }
+    .redflag-confetti {
+      display: none;
+      pointer-events: none;
+      position: fixed;
+      left: 0; right: 0; top: 0; height: 0;
+      z-index: 999;
+      font-size: 1.55em;
+      animation: redflagfall 1.4s linear infinite;
+    }
+    @keyframes redflagfall {
+      0% { transform: translateY(-55px);}
+      100% { transform: translateY(160vh);}
+    }
+    .savage-card {
+      width: 360px;
+      background: #f9e1fc;
+      color: #242424;
+      margin: 0 auto 24px;
+      border-radius: 18px 18px 41px 13px;
+      box-shadow: 0 3px 24px 6px #c72ba7bb;
+      padding: 23px 35px 22px 34px;
+      position: relative;
+      font-family: 'Comic Neue', cursive;
+      font-size: 1.12em;
+      min-height: 80px;
+      border-bottom: 6px dashed #f253ff;
+      background-image:
+        url('https://www.transparenttextures.com/patterns/stardust.png'),
+        linear-gradient(112deg,#faebffb8 70%,#ffedfd22 100%);
+      z-index: 4;
+    }
+    .torn-bullet {
+      height: 8px;
+      margin: 6px 0 12px;
+      display: block;
+    }
+    .copy-btn {
+      margin-top: 16px;
+      background: none;
+      border: 2px solid var(--neon-yellow);
+      color: var(--charcoal);
+      font-family: 'Comic Neue','Poppins',sans-serif;
+      border-radius: 16px;
+      padding: 9px 17px;
+      cursor: pointer;
+      box-shadow: 0 2px 12px var(--neon-yellow);
+      font-weight: bold;
+      position: relative;
+      transition: background .17s;
+    }
+    .copy-btn:hover {
+      background: var(--neon-yellow);
+      color: #da1fab;
+    }
+    .copy-btn[title]:hover:after {
+      content: attr(title);
+      position: absolute;
+      left: 50%;
+      bottom: -26px;
+      background: #2c0941;
+      color: #fff;
+      padding: 5px 17px;
+      font-size: 0.95em;
+      font-family: 'Comic Neue',cursive;
+      border-radius: 9px;
+      transform: translateX(-50%);
+      z-index: 5;
+      opacity: 1;
+      pointer-events: auto;
+      white-space: nowrap;
+    }
+    .send-btn {
+      display: block;
+      margin: 34px auto 0;
+      background: var(--blood-red);
+      color: #fff;
+      font-family: 'Comic Neue',cursive;
+      font-weight: bold;
+      border: none;
+      border-radius: 13px;
+      font-size: 1em;
+      padding: 14px 30px;
+      box-shadow: 0 3px 16px 3px var(--neon-pink);
+      cursor: pointer;
+      transition: transform .09s, box-shadow .14s;
+    }
+    .send-btn:hover {
+      transform: scale(1.05) rotate(1.5deg);
+      box-shadow: 0 1px 34px 10px #db102b;
+      background: var(--neon-pink);
+      color: var(--charcoal);
+    }
+    .gif-gallery {
+      margin: 25px auto 0;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow-x: auto;
+    }
+    .gif-gallery img {
+      height: 68px;
+      border-radius: 8px;
+      border: 2px solid var(--neon-pink);
+      margin-right: 2.5px;
+      box-shadow: 0 0 8px #db102b;
+      background: #1a092c;
+      transition: border-color .16s;
+    }
+    .gif-gallery img:hover {
+      border-color: var(--neon-yellow);
+      filter: saturate(1.13) brightness(1.1);
+    }
+    @media (max-width:660px) {
+      .input-section{
+        padding: 18px 7vw;
+      }
+      .output-section,
+      .savage-card{
+        width: 97vw;
+        min-width: unset;
+        padding: 12px 2vw !important;
+      }
+      .savage-card{
+        font-size: .99em;
+      }
+      .gif-gallery{
+        max-width: 97vw;
+      }
+    }
+    /* Loading Overlay (appended at end) */
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(24, 24, 35, 0.94);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Comic Neue', cursive;
+      transition: opacity 0.2s;
+    }
+    .loading-content {
+      text-align: center;
+      color: #fff;
+      background: linear-gradient(100deg, #ff5fcf 30%, #db102b 100%);
+      padding: 44px 52px;
+      border-radius: 24px;
+      box-shadow: 0 6px 24px #ff5fcf66;
+      min-width: 310px;
+    }
+    .loading-emoji {
+      font-size: 2.7em;
+      margin-bottom: 20px;
+      animation: emoji-pop .7s infinite alternate;
+    }
+    @keyframes emoji-pop {
+      0% { transform: scale(1);}
+      100% { transform: scale(1.15) rotate(-5deg);}
+    }
+    .loading-title {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 9px;
+      font-family: 'Poppins', cursive;
+    }
+    .loading-subtitle {
+      font-size: 1.08em;
+      color: #ffedb8;
+      font-style: italic;
+      font-family: 'Comic Neue', cursive;
+    }
+  </style>
+</head>
+<body>
+  <button class="dark-toggle" title="Toggle dark mode">🌓</button>
+  <header>
+    <div class="title-flag">
+      <span class="flag-icon"><i class="fas fa-flag"></i>
+        <span class="sparkles">✨✨😎</span>
+      </span>
+      Fake Friendship Detector
+    </div>
+    <div class="neon-underline"></div>
+    <div class="subtext">“We detect toxic energy faster than your ex detects happiness.”</div>
+  </header>
+  <section class="input-section">
+    <div class="input-section-title">💬 Spill the Drama</div>
+    <div class="input-section-sub">Tell us what your so-called friend did. No filter. No judgement. Just pure roast fuel.</div>
+    <textarea placeholder="Example: They only text when they want a favor, and forgot my birthday 3 years in a row."></textarea>
+    <br>
+    <button class="analyze-btn">Analyze the Fakeness 🔥</button>
+  </section>
+  <section class="output-section">
+    <div class="meme-card">
+      <span class="meme-burn-bg"></span>
+      <div class="meme-opener" id="meme-opener">Whoa, this is faker than their birthday wishes 🎉🙄</div>
+      <button class="replay-btn">Replay Burn 🔁</button>
+      <div class="gif-gallery" id="meme-gif-gallery">
+        <img src="https://media.giphy.com/media/l2Je9dG2WMgnb5xxG/giphy.gif" alt="Eye Roll GIF">
+        <img src="https://media.giphy.com/media/3o7ZetIsjtbkgNE1I4/giphy.gif" alt="Sip Tea GIF">
+        <img src="https://media.giphy.com/media/l4FGI8GoTL7N4DsyI/giphy.gif" alt="Throwing Phone GIF">
+      </div>
+    </div>
+    <div class="red-flags-card">
+      <div class="redflags-title">Red Flags – Roasted Edition</div>
+      <ul class="redflags-list" id="redflags-list">
+        <li style="--i:0"><span>They gaslight you</span>
+          <span class="tooltip"><i class="fas fa-question-circle"></i>
+            <span class="tooltiptext">Gaslight? More like GasLeak—run.</span>
+          </span>
+        </li>
+        <li style="--i:1"><span>They only text when they want a favor</span>
+          <span class="tooltip"><i class="fas fa-question-circle"></i>
+            <span class="tooltiptext">Translation: They’re a part-time friend with full-time expectations.</span>
+          </span>
+        </li>
+        <li style="--i:2"><span>Forgot your birthday (again)</span>
+          <span class="tooltip"><i class="fas fa-question-circle"></i>
+            <span class="tooltiptext">If my friendship had an anniversary, you’d ghost that too?</span>
+          </span>
+        </li>
+      </ul>
+      <div class="gif-gallery" id="flags-gif-gallery">
+        <img src="https://media.giphy.com/media/26ufnwz3wDUli7GU0/giphy.gif" alt="Suspicious GIF">
+        <img src="https://media.giphy.com/media/OkJat1YNdoD3W/giphy.gif" alt="Sarcastic GIF">
+      </div>
+    </div>
+  </section>
+  <div class="verdict-card">
+    <div class="badge-verdict badge-fakeaf" id="verdict-badge">
+      <span id="verdict-label">FAKE AF</span>
+      <span style="font-size:2em; margin-left:7px;" id="verdict-icon">💔</span>
+      <span style="font-size:1.7em; margin-left:7px;">🔥🗑️</span>
+    </div>
+  </div>
+  <div class="redflag-confetti" id="redflag-confetti">
+    🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩
+  </div>
+  <div class="savage-card" id="advice-card">
+    <div class="torn-bullet">─────────────────────────</div>
+    <span id="advice-text">“Treat your self-worth like an exclusive party—invite only. This friend = not on the guest list.”</span>
+    <br>
+    <button class="copy-btn" title="Ready for that one last reply? We got you.">Copy to Clapback 📋</button>
+  </div>
+  <button class="send-btn">Send This to Them 😈</button>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay">
+    <div class="loading-content">
+      <div class="loading-emoji" id="loading-emoji">💅</div>
+      <div class="loading-title" id="loading-title">Analyzing friendship...</div>
+      <div class="loading-subtitle" id="loading-subtitle">Polishing the petty. One red flag at a time.</div>
+    </div>
+  </div>
+  <script>
+    // Dark mode toggle (default ON)
+    document.querySelector('.dark-toggle').onclick = function() {
+      document.body.classList.toggle('lightmode');
+      if(document.body.classList.contains('lightmode')) {
+        document.body.style.background = "#f3effb";
+        document.body.style.color = "#161313";
+      } else {
+        document.body.style.background = "var(--charcoal)";
+        document.body.style.color = "#fff";
+      }
+    }
+    // Red flag confetti (for FAKE AF verdict)
+    function redFlagParty() {
+      let confetti = document.getElementById('redflag-confetti');
+      confetti.style.display = 'block';
+      setTimeout(() => confetti.style.display = 'none', 2600);
+    }
+    window.addEventListener('DOMContentLoaded', function(){
+      setTimeout(redFlagParty, 900);
+    });
+    document.querySelector('.copy-btn').onclick = function() {
+      navigator.clipboard.writeText(document.getElementById('advice-text').innerText);
+      this.innerText = "Copied!";
+      setTimeout(()=>{this.innerText="Copy to Clapback 📋"},1600);
+    };
+    // Loading overlay logic
+    const loadingActions = [
+      { emoji: "💅", title: "Analyzing friendship...", subtitle: "Polishing the petty. One red flag at a time." },
+      { emoji: "🔥", title: "Heating up the roast...", subtitle: "Preheating the emotional oven to 450° for optimal drama." },
+      { emoji: "👀", title: "Reading the betrayal receipts...", subtitle: "Zooming in on the screenshots like it’s CSI: Fake Friend Edition." },
+      { emoji: "📉", title: "Evaluating loyalty levels...", subtitle: "Currently checking if they even know your birthday." },
+      { emoji: "🧹", title: "Sweeping for gaslight residue...", subtitle: "Removing manipulative debris from the emotional crime scene." },
+      { emoji: "🧂", title: "Sprinkling sarcasm...", subtitle: "Loading savage response... now with 200% more salt." },
+      { emoji: "💔", title: "Cracking the friend code...", subtitle: "Detecting emotional freeloaders in progress..." },
+      { emoji: "📡", title: "Scanning vibes...", subtitle: "Friendship detected. Morally bankrupt. Proceeding with roast." },
+      { emoji: "🪞", title: "Reflecting on their behavior...", subtitle: "Because they sure as hell won’t." },
+      { emoji: "⏳", title: "Loading verdict...", subtitle: "Deciding between 'FAKE AF' or 'Needs Holy Water'." }
+    ];
+    let loadingIndex = 0;
+    let loadingInterval;
+    function showLoading() {
+      const overlay = document.getElementById('loading-overlay');
+      overlay.style.display = 'flex';
+      loadingIndex = 0;
+      setLoadingAction();
+      loadingInterval = setInterval(() => {
+        loadingIndex = (loadingIndex + 1) % loadingActions.length;
+        setLoadingAction();
+      }, 1600);
+    }
+    function setLoadingAction() {
+      const {emoji, title, subtitle} = loadingActions[loadingIndex];
+      document.getElementById('loading-emoji').textContent = emoji;
+      document.getElementById('loading-title').textContent = title;
+      document.getElementById('loading-subtitle').textContent = subtitle;
+    }
+    function hideLoading() {
+      document.getElementById('loading-overlay').style.display = 'none';
+      clearInterval(loadingInterval);
+    }
+    // Dynamic UI update after receiving backend results
+    async function analyzeDrama() {
+      const textarea = document.querySelector('textarea');
+      const dramaText = textarea.value.trim();
+      if (!dramaText) return;
+      showLoading();
+      try {
+        const resp = await fetch('/analyze', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({text: dramaText})
+        });
+        const result = await resp.json();
+        hideLoading();
+        // Update Meme Opener
+        document.getElementById('meme-opener').innerText = result.witty_opener || "Savage output incoming...";
+        // DO NOT UPDATE the GIFs here — keep static gifs!
+        // Update Red Flags
+        const redflagsList = document.getElementById('redflags-list');
+        if (result.red_flags && result.red_flags.length) {
+          redflagsList.innerHTML = result.red_flags.map((rf, i) => `
+            <li style="--i:${i}">
+              <span>${rf.flag}</span>
+              <span class="tooltip"><i class="fas fa-question-circle"></i>
+                <span class="tooltiptext">${rf.tooltip}</span>
+              </span>
+            </li>
+          `).join('');
+        }
+        // DO NOT UPDATE flags GIF carousel!
+        // Update Verdict
+        const verdictBadge = document.getElementById('verdict-badge');
+        verdictBadge.className = 'badge-verdict badge-' + (result.verdict_style || 'fakeaf');
+        document.getElementById('verdict-label').textContent = result.verdict_label || "FAKE AF";
+        document.getElementById('verdict-icon').textContent = result.verdict_icon || '💔';
+        // Show confetti if verdict is FAKE AF
+        if ((result.verdict_label || '').toUpperCase().includes('FAKE')) redFlagParty();
+        // Update Advice
+        document.getElementById('advice-text').innerText = result.advice || "Take the high road, but bring popcorn.";
+      } catch (e) {
+        hideLoading();
+        alert("Error: " + (e && e.message ? e.message : "Failed to contact agent"));
+      }
+    }
+    document.querySelector('.analyze-btn').onclick = analyzeDrama;
+    document.querySelector('textarea').addEventListener('keydown', function (ev) {
+      if(ev.ctrlKey && ev.key === 'Enter') analyzeDrama();
+    });
+  </script>
+</body>
+</html>
