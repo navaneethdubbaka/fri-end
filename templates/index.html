@@ -549,6 +549,235 @@
       font-style: italic;
       font-family: 'Comic Neue', cursive;
     }
+    /* COMPREHENSIVE MOBILE FIX - Replace existing mobile CSS */
+@media (max-width: 850px) {
+  .output-section {
+    flex-direction: column;
+    gap: 20px;
+    max-width: 100vw;
+    padding: 0 2vw;
+    margin: 20px auto 0;
+  }
+
+  .meme-card, .red-flags-card {
+    min-width: unset;
+    width: 96vw;
+    max-width: 96vw;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Header adjustments */
+  .title-flag {
+    font-size: 2.2em;
+    gap: 8px;
+  }
+
+  .subtext {
+    font-size: 1em;
+    padding: 0 3vw;
+  }
+
+  /* Input section */
+  .input-section {
+    max-width: 94vw;
+    padding: 20px 4vw;
+    margin: 20px auto;
+    border-radius: 20px;
+  }
+
+  .input-section-title {
+    font-size: 1.4em;
+  }
+
+  .input-section-sub {
+    font-size: 1em;
+  }
+
+  textarea {
+    width: 100%;
+    font-size: 1.1em;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  .analyze-btn {
+    font-size: 1.1em;
+    padding: 14px 30px;
+  }
+
+  /* Output section complete rewrite for mobile */
+  .output-section {
+    gap: 20px;
+    padding: 0 2vw;
+    width: 100vw;
+    max-width: 100vw;
+    margin: 20px auto 0;
+    box-sizing: border-box;
+  }
+
+  /* Meme card mobile */
+  .meme-card {
+    width: 96vw;
+    max-width: 96vw;
+    min-width: unset;
+    padding: 20px 4vw;
+    margin: 0 auto;
+    box-sizing: border-box;
+    border-radius: 20px;
+  }
+
+  .meme-opener {
+    font-size: 1.3em;
+    line-height: 1.3;
+    margin-bottom: 15px;
+    text-align: center;
+    word-wrap: break-word;
+  }
+
+  .replay-btn {
+    font-size: 0.9em;
+    padding: 8px 16px;
+  }
+
+  /* Red flags card mobile */
+  .red-flags-card {
+    width: 96vw;
+    max-width: 96vw;
+    min-width: unset;
+    padding: 20px 4vw;
+    margin: 0 auto;
+    box-sizing: border-box;
+    border-radius: 20px;
+  }
+
+  .redflags-title {
+    font-size: 1.2em;
+  }
+
+  .redflags-list li {
+    font-size: 1em;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    word-wrap: break-word;
+  }
+
+  .tooltiptext {
+    width: 180px;
+    font-size: 0.85em;
+  }
+
+  /* Verdict section mobile */
+  .verdict-card {
+    width: 100vw;
+    max-width: 100vw;
+    padding: 0 2vw;
+    margin: 20px auto 0;
+    box-sizing: border-box;
+  }
+
+  .badge-verdict {
+    width: 96vw;
+    max-width: 96vw;
+    min-width: unset;
+    font-size: 1.4em;
+    padding: 20px 4vw;
+    box-sizing: border-box;
+    border-radius: 15px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+  }
+
+  /* Advice card mobile */
+  .savage-card {
+    width: 96vw;
+    max-width: 96vw;
+    min-width: unset;
+    padding: 20px 4vw;
+    margin: 20px auto;
+    box-sizing: border-box;
+    font-size: 1em;
+    border-radius: 15px 15px 25px 10px;
+  }
+
+  .copy-btn {
+    font-size: 0.9em;
+    padding: 10px 16px;
+  }
+
+  .send-btn {
+    font-size: 1em;
+    padding: 12px 25px;
+    margin: 20px auto 0;
+  }
+
+  /* GIF galleries mobile */
+  .gif-gallery {
+    max-width: 96vw;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px 0;
+  }
+
+  .gif-gallery img {
+    height: 50px;
+    min-width: 50px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  /* Loading overlay mobile */
+  .loading-content {
+    width: 90vw;
+    max-width: 350px;
+    padding: 30px 20px;
+  }
+
+  .loading-title {
+    font-size: 1.3em;
+  }
+
+  .loading-subtitle {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 400px) {
+  /* Extra small screens */
+  .title-flag {
+    font-size: 1.8em;
+  }
+
+  .meme-opener {
+    font-size: 1.2em;
+  }
+
+  .badge-verdict {
+    font-size: 1.2em;
+    padding: 15px 3vw;
+  }
+
+  .input-section, .meme-card, .red-flags-card, .savage-card {
+    width: 98vw;
+    padding: 15px 3vw;
+  }
+}
+
+/* Ensure no horizontal overflow */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+* {
+  box-sizing: border-box;
+}
+
   </style>
 </head>
 <body>
